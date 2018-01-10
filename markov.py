@@ -43,33 +43,35 @@ def make_chains(text_string):
         [None]
     """
     words = text_string.split()  # now we have a list of words
+    words.append(None)
 
     chains = {}
 
-    for n, word in enumerate(words):
-        if n < len(words) - 2:
-            ngram_key = (words[n], words[n + 1])
+    # for i, word in enumerate(words):
+    #     if i < len(words) - 2:
+    for i in range(len(words) - 2):
+        ngram_key = (words[i], words[i + 1])
 
-            if chains.get(ngram_key):  # Checks ngram_key exist in a Dict
-                # word_paths_list = chains[ngram_key]
-                # word_paths_list.append(words[n + 2])
-                # chains[ngram_key] = word_paths_list
-                # OR -
-                chains[ngram_key].append(words[n + 2])
+        if chains.get(ngram_key):  # Checks ngram_key exist in a Dict
+            # word_paths_list = chains[ngram_key]
+            # word_paths_list.append(words[i + 2])
+            # chains[ngram_key] = word_paths_list
+            # OR -
+            chains[ngram_key].append(words[i + 2])
 
-            else:
-                # word_paths_list = []
-                # word_paths_list.append(words[n + 2])
-                # chains[ngram_key] = word_paths_list
-                chains[ngram_key] = [words[n + 2]]
+        else:
+            # word_paths_list = []
+            # word_paths_list.append(words[i + 2])
+            # chains[ngram_key] = word_paths_list
+            chains[ngram_key] = [words[i + 2]]
 
-            n += 1
+            # i += 1
 
-        elif n < len(words) - 1:
-            ngram_key = (words[n], words[n + 1])
-            if not chains.get(ngram_key):
-                ngram_key = words[n], words[n+1]
-                chains[ngram_key] = None
+        # elif i < len(words) - 1:
+        #     ngram_key = (words[i], words[i + 1])
+        #     if not chains.get(ngram_key):
+        #         # ngram_key = words[i], words[i+1]
+        #         chains[ngram_key] = None
 
     #print chains
     return chains
@@ -78,25 +80,17 @@ def make_chains(text_string):
 def make_text(chains):
     """Return text from chains."""
 
-    words = []
+    key = choice(chains.keys())
+    words = list(key)
 
-    # Make a new key out of the second word in the first key and the random 
-    # word you pulled out from the list of words that followed it.
-    # Look up that new key in the dictionary, and pull a new random word out of the new list.
-    # Keep doing that until your program raises a KeyError.
-    first_key = choice(chains.keys())
-    print first_key
-   
-    try:  # handing the indexError for the empty list of the last tuple. good or nah?
-        first_link = choice(chains[first_key])
-        print first_link # printing just to see if it works
-        next_key = (first_key[1], first_link)
-        print next_key
-
-    except:
-        return False
-
-
+    while True:
+        # for ngram_keys in chains.keys():
+        next_word = choice(chains[key])
+        if next_word is None:
+            break
+        words.append(next_word)
+        key = (words[-2], words[-1])
+       
     return " ".join(words)
 
 
