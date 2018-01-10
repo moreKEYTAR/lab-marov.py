@@ -38,35 +38,38 @@ def make_chains(text_string):
 
         >>> chains[('hi', 'there')]
         ['mary', 'juanita']
-        
+     
         >>> chains[('there','juanita')]
         [None]
     """
     words = text_string.split()  # now we have a list of words
-    
+
     chains = {}
 
     for n, word in enumerate(words):
         if n < len(words) - 2:
-            ngram_key = words[n], words[n + 1]
+            ngram_key = (words[n], words[n + 1])
 
             if chains.get(ngram_key):  # Checks ngram_key exist in a Dict
                 # word_paths_list = chains[ngram_key]
                 # word_paths_list.append(words[n + 2])
                 # chains[ngram_key] = word_paths_list
-                # OR - 
+                # OR -
                 chains[ngram_key].append(words[n + 2])
 
             else:
-                word_paths_list = []
-                word_paths_list.append(words[n + 2])
-                chains[ngram_key] = word_paths_list
-            
+                # word_paths_list = []
+                # word_paths_list.append(words[n + 2])
+                # chains[ngram_key] = word_paths_list
+                chains[ngram_key] = [words[n + 2]]
+
             n += 1
 
         elif n < len(words) - 1:
-            ngram_key = words[n], words[n+1]
-            chains[ngram_key] = None
+            ngram_key = (words[n], words[n + 1])
+            if not chains.get(ngram_key):
+                ngram_key = words[n], words[n+1]
+                chains[ngram_key] = None
 
     print chains
     return chains
