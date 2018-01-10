@@ -38,7 +38,7 @@ def make_chains(text_string):
 
         >>> chains[('hi', 'there')]
         ['mary', 'juanita']
-     
+
         >>> chains[('there','juanita')]
         [None]
     """
@@ -71,7 +71,7 @@ def make_chains(text_string):
                 ngram_key = words[n], words[n+1]
                 chains[ngram_key] = None
 
-    print chains
+    #print chains
     return chains
 
 
@@ -80,7 +80,17 @@ def make_text(chains):
 
     words = []
 
-    # your code goes here
+    # Make a new key out of the second word in the first key and the random word you pulled out from the list of words that followed it.
+    # Look up that new key in the dictionary, and pull a new random word out of the new list.
+    # Keep doing that until your program raises a KeyError.
+    first_key = choice(chains.keys())
+    print first_key
+    try: # handing the indexError for the empty list of the last tuple. good or nah?
+        first_link = choice(chains[first_key])
+        print first_link # printing just to see if it works
+    except:
+        return False
+
 
     return " ".join(words)
 
