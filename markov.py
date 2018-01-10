@@ -80,14 +80,19 @@ def make_text(chains):
 
     words = []
 
-    # Make a new key out of the second word in the first key and the random word you pulled out from the list of words that followed it.
+    # Make a new key out of the second word in the first key and the random 
+    # word you pulled out from the list of words that followed it.
     # Look up that new key in the dictionary, and pull a new random word out of the new list.
     # Keep doing that until your program raises a KeyError.
     first_key = choice(chains.keys())
     print first_key
-    try: # handing the indexError for the empty list of the last tuple. good or nah?
+   
+    try:  # handing the indexError for the empty list of the last tuple. good or nah?
         first_link = choice(chains[first_key])
         print first_link # printing just to see if it works
+        next_key = (first_key[1], first_link)
+        print next_key
+
     except:
         return False
 
