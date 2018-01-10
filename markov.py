@@ -55,9 +55,9 @@ def make_chains(text_string, n):
         # make an ngram key
         if n > 0 and n < len(words):
             c = n  # counter
-            ngram_key = (,)
+            ngram_key = ()
             while c > 0:
-                next_word = (words[i + (n - c)])
+                next_word = tuple((words[i + (n - c)], ))
                 ngram_key = ngram_key + next_word
                 c -= 1 
 
@@ -84,20 +84,30 @@ def make_chains(text_string, n):
     return chains
 
 
-def make_text(chains):
+def make_text(chains, n):
     """Return text from chains."""
 
     key = choice(chains.keys())
+
+    # Starting the output text with a list that begins with our first key
     words = list(key)
 
     while True:
         # for ngram_keys in chains.keys():
-        next_word = choice(chains[key])
+        next_word = choice(chains[key]) # <----
         if next_word is None:
             break
         words.append(next_word)
-        key = (words[-2], words[-1])
-       
+
+        # Makes the next key using the next word
+        # key = (words[-n], words[-(n - 1)])
+        c = 0  # counter
+        key = () # making key empty again - tuple
+        while c < n:
+            next_word_in_key = tuple((words[-(n - c)], ))
+            key = key + next_word_in_key
+            c += 1 
+
     return " ".join(words)
 
 
@@ -110,8 +120,9 @@ input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
 chains = make_chains(input_text, n)
+# print chains
 
 # Produce random text
-random_text = make_text(chains)
+random_text = make_text(chains, n)
 
 print random_text
