@@ -1,6 +1,7 @@
 """Generate Markov text from text files."""
 
 from random import choice
+import sys
 
 
 def open_and_read_file(file_path):
@@ -18,7 +19,7 @@ def open_and_read_file(file_path):
     return "Contents of your file as one long string"
 
 
-def make_chains(text_string):
+def make_chains(text_string, n):
     """Take input text as string; return dictionary of Markov chains.
 
     A chain will be a key that consists of a tuple of (word1, word2)
@@ -43,35 +44,41 @@ def make_chains(text_string):
         [None]
     """
     words = text_string.split()  # now we have a list of words
-    words.append(None)
+    words.append(None) # helps for knowing the end of the text
 
     chains = {}
 
     # for i, word in enumerate(words):
     #     if i < len(words) - 2:
-    for i in range(len(words) - 2):
-        ngram_key = (words[i], words[i + 1])
+    for i in range(len(words) - n):
 
-        if chains.get(ngram_key):  # Checks ngram_key exist in a Dict
+        # make an ngram key
+        if n > 0 and n < len(words):
+            c = n  # counter
+            ngram_key = (,)
+            while c > 0:
+                next_word = (words[i + (n - c)])
+                ngram_key = ngram_key + next_word
+                c -= 1 
+
+        # OLD CODE FOR BIGRAM (before n implementation)
+        # ngram_key = (words[i], words[i + 1])
+
+        # Checks ngram_key exist in the dict, then add a value to the value list
+        if chains.get(ngram_key):  
             # word_paths_list = chains[ngram_key]
             # word_paths_list.append(words[i + 2])
             # chains[ngram_key] = word_paths_list
             # OR -
-            chains[ngram_key].append(words[i + 2])
+            chains[ngram_key].append(words[i + n])
 
+        # If the ngram_key doesn't already exist, start a list with a value
         else:
             # word_paths_list = []
             # word_paths_list.append(words[i + 2])
             # chains[ngram_key] = word_paths_list
-            chains[ngram_key] = [words[i + 2]]
+            chains[ngram_key] = [words[i + n]]
 
-            # i += 1
-
-        # elif i < len(words) - 1:
-        #     ngram_key = (words[i], words[i + 1])
-        #     if not chains.get(ngram_key):
-        #         # ngram_key = words[i], words[i+1]
-        #         chains[ngram_key] = None
 
     #print chains
     return chains
@@ -94,13 +101,15 @@ def make_text(chains):
     return " ".join(words)
 
 
-input_path = "green-eggs.txt"
+n = 4 # this is the length of the ngram
+
+input_path = sys.argv[1]
 
 # Open the file and turn it into one long string
 input_text = open_and_read_file(input_path)
 
 # Get a Markov chain
-chains = make_chains(input_text)
+chains = make_chains(input_text, n)
 
 # Produce random text
 random_text = make_text(chains)
